@@ -2,14 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
 
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
 class Post extends Eloquent
 {
     protected $connection = 'mongodb';
-    protected $collection = 'Post';
+
+    protected $fillable = ['title', 'body', 'user_id'];
 
     // source: https://github.com/jenssegers/laravel-mongodb#relations
     public function author()
