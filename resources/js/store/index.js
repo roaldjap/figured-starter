@@ -14,7 +14,6 @@ export default new Vuex.Store({
 
   actions: {
     async getAllPosts({commit}){
-      console.log(axios.get('post/get_all'));
       return commit('setPosts', await axios.get('post/get_all'));
     },
   },

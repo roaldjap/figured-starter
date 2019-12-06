@@ -27,13 +27,16 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+            
             {{-- create post component here --}}
-            {{-- <create-post /> --}}
+            <create-post />
         </div>
-        <div class="col-md-6 posts-container">
+        <div class="col-md-8 posts-container">
             {{-- display all posts component here  --}}
-            <all-posts />
+            <div class="card-columns">
+                <all-posts />
+            </div>
         </div>
     </div>
 </div>

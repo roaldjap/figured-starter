@@ -16,7 +16,7 @@ class PostController extends Controller
     //
     public function getAllPosts(){
         // create a query
-        $posts = Post::with('post_images')->orderBy('created_at')->get();
+        $posts = Post::with('post_images')->orderBy('created_at', 'desc')->get();
         // respond as json
         return response()->json(['error' => false, 'data'=> $posts]);
     }
@@ -33,7 +33,7 @@ class PostController extends Controller
         // 4. Array of post images
         $images = $request->images;
 
-
+        
         // Create a post
         $post = Post::create([
             'title' => $title,
@@ -41,18 +41,23 @@ class PostController extends Controller
             'user_id' => $user->id,
         ]);
 
-        foreach($images as $image){
-            // put image path in a variable
-            $imagePath = Storage::disk('uploads')->put($user->email . 'posts', $image);
-            PostImage::create([ 
-                'post_image_caption' => $title,
-                'post_image_path' => '/uploads/' . $imagePath,
-                'post_id' => $post -> id
-            ]);
+        if($images){ // if there's an image
+            
+            foreach($images as $image){
+                // put image path in a variable
+                $imagePath = Storage::disk('uploads')->put($user->email . '/posts', $image);
+    
+                PostImage::create([ 
+                    'post_image_caption' => $title,
+                    'post_image_path' => '/uploads/' . $imagePath, // /uploads/test@gmail.com/posts/image.jpg
+                    'post_id' => $post->id
+                ]);
+            }
         }
 
         // respond as json
-        return response()->json(['error' => false, 'data' => post]);
+        return response()->json(['error' => false, 'data' => $post]);
 
     }
+
 }
