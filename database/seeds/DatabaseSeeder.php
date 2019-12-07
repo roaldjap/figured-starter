@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -10,28 +12,13 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // $this->call(UsersTableSeeder::class);
-        // Delete users first
-        // DB::collection('users')->delete();
+    {   
+        Eloquent::unguard();
 
-        // Insert to database
-        $user = DB::collection('users')->insert([
-            'name' => 'Jap Ignacio',
-            'email' => 'roaldjap@gmail.com',
-            'password' => 'testtest'
-        ]);
-
-        $post = DB::collection('post')->insert([
-            'title' => "Awesome Article", 
-            'body' => "Here is some Sample content please see.", 
-            'user_id' => $user->id
-        ]);
-
-        $post_image = DB::collection('post')->insert([
-            'title' => "Awesome Article", 
-            'body' => "Here is some Sample content please see.", 
-            'user_id' => $user->id
-        ]);
+        // For fresh database seed.
+        $this->call('UserSeeder');
+        $this->call('PostSeeder');
+        $this->call('PostImageSeeder');
+       
     }
 }
