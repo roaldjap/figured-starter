@@ -1,3 +1,12 @@
+# Finished - instructions - Jap Ignacio
+
+Demo User:
+
+    Email: roaldjap@gmail.com
+    Password: testtest
+
+<hr>
+
 # Figured Starter
 
 This is a starter for Laravel, running under Docker with MongoDB.
