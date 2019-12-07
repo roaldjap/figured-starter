@@ -60,6 +60,12 @@ class PostController extends Controller
 
     }
 
+    public function editPost(Request $request, $id){
+        $update = ['title' => $request->title, 'body' => $request->body];
+        $post = Post::findOrFail($id)->update($update);
+        return response()->json(['error' => false, 'data' => $post]);
+    }
+
     public function deletePost($id){
         
         // find post_id and delete

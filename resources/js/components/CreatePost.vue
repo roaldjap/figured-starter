@@ -43,7 +43,6 @@ import axios from 'axios';
 export default {
 
   name: 'create-post',
-  props: ['posts'],
   data(){
     return{
       dialogImageUrl: '',

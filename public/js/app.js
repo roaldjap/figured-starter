@@ -3405,13 +3405,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'all-posts',
   data: function data() {
     return {
       postDialogVisible: false,
-      currentPost: ''
+      currentPost: '',
+      editPostDialogVisible: false,
+      editCurrentPost: '',
+      editTitle: '',
+      editBody: '',
+      isUpdatingPost: false
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['posts'])),
@@ -3422,7 +3446,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     // truncate text
     truncateText: function truncateText(text) {
       if (text.length > 24) {
-        return "".concat(text.substr(0, 24), "...");
+        return "".concat(text.substr(0, 300), "...");
       }
 
       return text;
@@ -3440,14 +3464,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var post = this.posts[postIndex]; // select id and delete request to backend
 
-      alert(post._id);
       axios["delete"]("post/".concat(post._id, "/delete_post")).then(function (res) {
         alert("".concat(post._id, " - was deleted"));
 
         _this.$store.dispatch('getAllPosts');
       })["catch"](function (err) {
         console.log(err);
-        alert('Something went wrong. please console.');
+        alert('Delete Post - Feature: Something went wrong. please console.');
+      });
+    },
+    editPost: function editPost(postIndex) {
+      var post = this.posts[postIndex];
+      this.editCurrentPost = post; // select id and delete request to backend
+
+      console.log(post);
+      this.editTitle = post.title;
+      this.editBody = post.body;
+      this.editCurrentPost = post;
+      this.editPostDialogVisible = true;
+    },
+    updatePost: function updatePost() {
+      var _this2 = this;
+
+      var post = this.editCurrentPost;
+      var editFormData = {
+        'title': this.editTitle,
+        'body': this.editBody
+      };
+      isUpdatingPost = true;
+      axios.put("post/".concat(post._id, "/edit_post"), editFormData).then(function (res) {
+        alert("Successful - Post Updated");
+
+        _this2.$store.dispatch('getAllPosts');
+
+        isUpdatingPost = false;
+      })["catch"](function (err) {
+        console.log(err);
+        alert('Update Post - Feature: Something went wrong. please console.');
       });
     }
   }
@@ -3515,7 +3568,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'create-post',
-  props: ['posts'],
   data: function data() {
     return {
       dialogImageUrl: '',
@@ -100669,7 +100721,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "btn btn-primary m-2",
+                  staticClass: "btn btn-primary mr-2",
                   on: {
                     click: function($event) {
                       return _vm.viewPost(i)
@@ -100682,7 +100734,20 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "btn btn-danger m-2",
+                  staticClass: "btn btn-success mr-2",
+                  on: {
+                    click: function($event) {
+                      return _vm.editPost(i)
+                    }
+                  }
+                },
+                [_vm._v("Edit Post")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger mr-2",
                   on: {
                     click: function($event) {
                       return _vm.deletePost(i)
@@ -100699,7 +100764,7 @@ var render = function() {
           ? _c(
               "el-dialog",
               {
-                attrs: { visible: _vm.postDialogVisible, width: "40%" },
+                attrs: { visible: _vm.postDialogVisible },
                 on: {
                   "update:visible": function($event) {
                     _vm.postDialogVisible = $event
@@ -100707,51 +100772,145 @@ var render = function() {
                 }
               },
               [
-                _c("span", [
-                  _c("h3", [_vm._v(_vm._s(_vm.currentPost.title))]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "row" },
-                    _vm._l(_vm.currentPost.post_images, function(img, i) {
-                      return _c("div", { key: i, staticClass: "col-md-6" }, [
-                        _c("img", {
-                          staticClass: "img-thumbnail",
-                          attrs: { src: img.post_image_path, alt: "" }
-                        })
-                      ])
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("p", [_vm._v(_vm._s(_vm.currentPost.body))]),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      staticClass: "dialog-footer",
-                      attrs: { slot: "footer" },
-                      slot: "footer"
-                    },
-                    [
-                      _c(
-                        "el-button",
-                        {
-                          attrs: { type: "primary" },
-                          on: {
-                            click: function($event) {
-                              _vm.postDialogVisible = false
-                            }
+                _c(
+                  "span",
+                  [
+                    _c("h3", [_vm._v(_vm._s(_vm.currentPost.title))]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "row" },
+                      _vm._l(_vm.currentPost.post_images, function(img, i) {
+                        return _c("div", { key: i, staticClass: "col-md-6" }, [
+                          _c("img", {
+                            staticClass: "img-thumbnail",
+                            attrs: { src: img.post_image_path, alt: "" }
+                          })
+                        ])
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(_vm.currentPost.body))]),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
+                      {
+                        attrs: { type: "primary" },
+                        on: {
+                          click: function($event) {
+                            _vm.postDialogVisible = false
                           }
-                        },
-                        [_vm._v("Ok")]
-                      )
-                    ],
-                    1
-                  )
-                ])
+                        }
+                      },
+                      [_vm._v("Ok")]
+                    )
+                  ],
+                  1
+                )
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editCurrentPost
+          ? _c(
+              "el-dialog",
+              {
+                attrs: { visible: _vm.editPostDialogVisible, width: "40%" },
+                on: {
+                  "update:visible": function($event) {
+                    _vm.editPostDialogVisible = $event
+                  }
+                }
+              },
+              [
+                _c("form", [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "title" } }, [_vm._v("Title")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.editTitle,
+                          expression: "editTitle"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        id: "title",
+                        placeholder: "Post Title",
+                        required: ""
+                      },
+                      domProps: { value: _vm.editTitle },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.editTitle = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "body" } }, [
+                      _vm._v("Content")
+                    ]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.editBody,
+                          expression: "editBody"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        id: "body",
+                        placeholder: "Content here..",
+                        required: ""
+                      },
+                      domProps: { value: _vm.editBody },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.editBody = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: { type: "button" },
+                    on: { click: _vm.updatePost }
+                  },
+                  [
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(
+                          _vm.isUpdatingPost
+                            ? "Updating your Post..."
+                            : "Update Post"
+                        ) +
+                        "\n      "
+                    )
+                  ]
+                )
               ]
             )
           : _vm._e()
