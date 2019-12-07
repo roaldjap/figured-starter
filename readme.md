@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="video-demo.gif" />
+</p>
+
 # Finished - instructions - Jap Ignacio
 
 Demo User:
