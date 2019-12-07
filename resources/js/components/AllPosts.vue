@@ -76,6 +76,15 @@ export default {
 
       // select id and delete request to backend
       alert(post._id);
+      axios.delete(`post/${post._id}/delete_post`)
+          .then((res)=>{
+            alert(`${post._id} - was deleted`);
+            this.$store.dispatch('getAllPosts');
+          })
+          .catch((err) => {
+            console.log(err);
+            alert('Something went wrong. please console.');
+          });
     }
   }
 

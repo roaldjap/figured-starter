@@ -60,4 +60,12 @@ class PostController extends Controller
 
     }
 
+    public function deletePost($id){
+        
+        // find post_id and delete
+        $post = Post::find($id);
+        $post->delete();
+        return response()->json(['error' => false, 'data' => $post]);
+    }
+
 }

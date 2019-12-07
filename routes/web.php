@@ -20,4 +20,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'auth', 'prefix' => 'post'], function(){
     Route::get('get_all', 'PostController@getAllPosts');
     Route::post('create_post', 'PostController@createPost');
+    Route::delete('{id}/delete_post/', 'PostController@deletePost');
 });
