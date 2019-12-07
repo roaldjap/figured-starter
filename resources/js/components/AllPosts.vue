@@ -130,13 +130,13 @@ export default {
         'body': this.editBody
       };
 
-      isUpdatingPost = true;
+      this.isUpdatingPost = true;
 
       axios.put(`post/${post._id}/edit_post`, editFormData)
         .then((res)=>{
             alert("Successful - Post Updated");
             this.$store.dispatch('getAllPosts');
-            isUpdatingPost = false;
+            this.isUpdatingPost = false;
         })
         .catch((err) => {
           console.log(err);

@@ -3491,13 +3491,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'title': this.editTitle,
         'body': this.editBody
       };
-      isUpdatingPost = true;
+      this.isUpdatingPost = true;
       axios.put("post/".concat(post._id, "/edit_post"), editFormData).then(function (res) {
         alert("Successful - Post Updated");
 
         _this2.$store.dispatch('getAllPosts');
 
-        isUpdatingPost = false;
+        _this2.isUpdatingPost = false;
       })["catch"](function (err) {
         console.log(err);
         alert('Update Post - Feature: Something went wrong. please console.');
